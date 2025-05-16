@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  app:
+  php:
     build:
-      context: .
-      dockerfile: php/Dockerfile
+      context: ..
+      dockerfile: docker/php/Dockerfile
     container_name: tot-backend
     volumes:
       - ../backend:/var/www
@@ -16,8 +16,8 @@ services:
 
   node:
     build:
-      context: .
-      dockerfile: node/Dockerfile
+      context: ..
+      dockerfile: docker/node/Dockerfile
     container_name: tot-frontend
     volumes:
       - ../frontend:/app

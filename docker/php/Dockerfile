@@ -15,3 +15,4 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # Copy Laravel source later via volume mount or build context
+COPY ../backend /var/www/html
