@@ -1,1 +1,47 @@
-// Placeholder
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ../backend
+      dockerfile: ../docker/php/Dockerfile
+    container_name: tot-backend
+    volumes:
+      - ../backend:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - totnet
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker/node/Dockerfile
+    container_name: tot-frontend
+    volumes:
+      - ../frontend:/app
+    ports:
+      - "5173:5173"
+    networks:
+      - totnet
+
+  db:
+    image: mysql:8.0
+    container_name: tot-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tot
+      MYSQL_USER: totuser
+      MYSQL_PASSWORD: totpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - totnet
+
+volumes:
+  db_data:
+
+networks:
+  totnet:
