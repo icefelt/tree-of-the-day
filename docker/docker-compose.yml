@@ -3,45 +3,44 @@ version: '3.8'
 services:
   app:
     build:
-      context: ../backend
-      dockerfile: ../docker/php/Dockerfile
+      context: .
+      dockerfile: php/Dockerfile
     container_name: tot-backend
     volumes:
-      - ../backend:/var/www/html
+      - ../backend:/var/www
+    working_dir: /var/www
+    ports:
+      - "9000:9000"
     depends_on:
       - db
-    networks:
-      - totnet
 
-  frontend:
+  node:
     build:
-      context: ../frontend
-      dockerfile: ../docker/node/Dockerfile
+      context: .
+      dockerfile: node/Dockerfile
     container_name: tot-frontend
     volumes:
       - ../frontend:/app
+    working_dir: /app
     ports:
       - "5173:5173"
-    networks:
-      - totnet
+    stdin_open: true
+    tty: true
+    command: npm run dev
 
   db:
     image: mysql:8.0
     container_name: tot-db
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tot
       MYSQL_USER: totuser
       MYSQL_PASSWORD: totpass
+      MYSQL_ROOT_PASSWORD: rootpass
     ports:
       - "3306:3306"
     volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - totnet
+      - tot-mysql-data:/var/lib/mysql
 
 volumes:
-  db_data:
-
-networks:
-  totnet:
+  tot-mysql-data:
